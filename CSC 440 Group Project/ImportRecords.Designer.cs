@@ -65,7 +65,7 @@
             this.mainLabel.ForeColor = System.Drawing.Color.White;
             this.mainLabel.Location = new System.Drawing.Point(225, 53);
             this.mainLabel.Name = "mainLabel";
-            this.mainLabel.Size = new System.Drawing.Size(353, 65);
+            this.mainLabel.Size = new System.Drawing.Size(472, 86);
             this.mainLabel.TabIndex = 2;
             this.mainLabel.Text = "Import Records";
             this.mainLabel.Click += new System.EventHandler(this.mainLabel_Click);
@@ -89,7 +89,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.mainLabel);

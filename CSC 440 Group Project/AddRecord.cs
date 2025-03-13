@@ -17,35 +17,6 @@ namespace CSC_440_Group_Project
             InitializeComponent();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        private void textBox4_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox5_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox6_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void label1_Click(object sender, EventArgs e)
         {
 
@@ -63,8 +34,8 @@ namespace CSC_440_Group_Project
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(textBox1.Text) || string.IsNullOrEmpty(textBox2.Text) || string.IsNullOrEmpty(textBox3.Text)
-                || string.IsNullOrEmpty(textBox4.Text) || string.IsNullOrEmpty(textBox5.Text) || string.IsNullOrEmpty(textBox6.Text))
+            if (string.IsNullOrEmpty(StudentIDIn.Text) || string.IsNullOrEmpty(CoursePrefixIn.Text) || string.IsNullOrEmpty(CourseNumIn.Text)
+                || string.IsNullOrEmpty(GradeIn.Text) || string.IsNullOrEmpty(YearIn.Text) || string.IsNullOrEmpty(SemesterIn.Text))
             {
                 MessageBox.Show("One or more fields were left empty.", "Add Record Failed", MessageBoxButtons.OK , MessageBoxIcon.Error);
             }
