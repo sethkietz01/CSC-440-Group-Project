@@ -36,6 +36,7 @@
             this.addRecordButton = new System.Windows.Forms.Button();
             this.importRecordsButton = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // mainLabel
@@ -53,6 +54,8 @@
             // deleteRecordButton
             // 
             this.deleteRecordButton.BackColor = System.Drawing.Color.Silver;
+            this.deleteRecordButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.deleteRecordButton.FlatAppearance.BorderSize = 100;
             this.deleteRecordButton.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.deleteRecordButton.ForeColor = System.Drawing.Color.Black;
             this.deleteRecordButton.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -109,6 +112,8 @@
             // importRecordsButton
             // 
             this.importRecordsButton.BackColor = System.Drawing.Color.Silver;
+            this.importRecordsButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
+            this.importRecordsButton.FlatAppearance.BorderSize = 3;
             this.importRecordsButton.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.importRecordsButton.ForeColor = System.Drawing.Color.Black;
             this.importRecordsButton.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -125,6 +130,10 @@
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // Form1
             // 
@@ -155,6 +164,7 @@
         private System.Windows.Forms.Button addRecordButton;
         private System.Windows.Forms.Button importRecordsButton;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 

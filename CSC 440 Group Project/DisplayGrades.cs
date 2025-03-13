@@ -10,14 +10,19 @@ using System.Windows.Forms;
 
 namespace CSC_440_Group_Project
 {
-    public partial class Delete_Record : Form
+    public partial class DisplayGrades : Form
     {
-        public Delete_Record()
+        public DisplayGrades()
         {
             InitializeComponent();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
         }
