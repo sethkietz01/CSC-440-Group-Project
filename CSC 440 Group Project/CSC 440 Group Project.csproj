@@ -64,6 +64,7 @@
     <Compile Include="DisplayGrades.Designer.cs">
       <DependentUpon>DisplayGrades.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper.cs" />
     <Compile Include="ImportRecords.cs">
       <SubType>Form</SubType>
     </Compile>

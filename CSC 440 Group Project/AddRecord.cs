@@ -34,15 +34,13 @@ namespace CSC_440_Group_Project
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(StudentIDIn.Text) || string.IsNullOrEmpty(CoursePrefixIn.Text) || string.IsNullOrEmpty(CourseNumIn.Text)
-                || string.IsNullOrEmpty(GradeIn.Text) || string.IsNullOrEmpty(YearIn.Text) || string.IsNullOrEmpty(SemesterIn.Text))
-            {
-                MessageBox.Show("One or more fields were left empty.", "Add Record Failed", MessageBoxButtons.OK , MessageBoxIcon.Error);
-            }
+            var (isValid, errorMessage) = Helper.validateModifyRecordForms(StudentIDIn.Text, CoursePrefixIn.Text, CourseNumIn.Text, GradeIn.Text, YearIn.Text, SemesterIn.Text);
+
+            if (! isValid) // If the form is not valid
+                MessageBox.Show(errorMessage, "Add Record Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
-            {
                 MessageBox.Show("Record successfully added.", "Add Record Succeeded", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            
         }
     }
 }
