@@ -36,11 +36,18 @@ namespace CSC_440_Group_Project
         {
             var (isValid, errorMessage) = Helper.validateModifyRecordForms(StudentIDIn.Text, CoursePrefixIn.Text, CourseNumIn.Text, GradeIn.Text, YearIn.Text, SemesterIn.Text);
 
-            if (! isValid) // If the form is not valid
+            if (!isValid) // If the form is not valid
                 MessageBox.Show(errorMessage, "Add Record Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
+            {
                 MessageBox.Show("Record successfully added.", "Add Record Succeeded", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            
+
+                /*
+                 *      Need code here to attempt adding the grade to the database
+                 */
+
+                this.Close();
+            }
         }
     }
 }
