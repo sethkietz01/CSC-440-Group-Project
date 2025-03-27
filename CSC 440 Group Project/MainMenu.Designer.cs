@@ -54,14 +54,14 @@
             // 
             // deleteRecordButton
             // 
-            this.deleteRecordButton.BackColor = System.Drawing.Color.Silver;
+            this.deleteRecordButton.BackColor = System.Drawing.Color.SeaShell;
             this.deleteRecordButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.deleteRecordButton.FlatAppearance.BorderSize = 100;
             this.deleteRecordButton.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.deleteRecordButton.ForeColor = System.Drawing.Color.Black;
             this.deleteRecordButton.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.deleteRecordButton.Location = new System.Drawing.Point(734, 248);
-            this.deleteRecordButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.deleteRecordButton.Margin = new System.Windows.Forms.Padding(4);
             this.deleteRecordButton.Name = "deleteRecordButton";
             this.deleteRecordButton.Size = new System.Drawing.Size(265, 154);
             this.deleteRecordButton.TabIndex = 3;
@@ -76,7 +76,7 @@
             this.modifyRecordButton.ForeColor = System.Drawing.Color.Black;
             this.modifyRecordButton.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.modifyRecordButton.Location = new System.Drawing.Point(1196, 248);
-            this.modifyRecordButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.modifyRecordButton.Margin = new System.Windows.Forms.Padding(4);
             this.modifyRecordButton.Name = "modifyRecordButton";
             this.modifyRecordButton.Size = new System.Drawing.Size(265, 154);
             this.modifyRecordButton.TabIndex = 4;
@@ -91,7 +91,7 @@
             this.printReportButton.ForeColor = System.Drawing.Color.Black;
             this.printReportButton.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.printReportButton.Location = new System.Drawing.Point(263, 484);
-            this.printReportButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.printReportButton.Margin = new System.Windows.Forms.Padding(4);
             this.printReportButton.Name = "printReportButton";
             this.printReportButton.Size = new System.Drawing.Size(265, 154);
             this.printReportButton.TabIndex = 5;
@@ -106,7 +106,7 @@
             this.addRecordButton.ForeColor = System.Drawing.Color.Black;
             this.addRecordButton.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.addRecordButton.Location = new System.Drawing.Point(263, 248);
-            this.addRecordButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.addRecordButton.Margin = new System.Windows.Forms.Padding(4);
             this.addRecordButton.Name = "addRecordButton";
             this.addRecordButton.Size = new System.Drawing.Size(265, 154);
             this.addRecordButton.TabIndex = 6;
@@ -116,14 +116,14 @@
             // 
             // importRecordsButton
             // 
-            this.importRecordsButton.BackColor = System.Drawing.Color.Silver;
+            this.importRecordsButton.BackColor = System.Drawing.Color.SeaShell;
             this.importRecordsButton.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.importRecordsButton.FlatAppearance.BorderSize = 3;
             this.importRecordsButton.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.importRecordsButton.ForeColor = System.Drawing.Color.Black;
             this.importRecordsButton.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.importRecordsButton.Location = new System.Drawing.Point(734, 484);
-            this.importRecordsButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.importRecordsButton.Margin = new System.Windows.Forms.Padding(4);
             this.importRecordsButton.Name = "importRecordsButton";
             this.importRecordsButton.Size = new System.Drawing.Size(265, 154);
             this.importRecordsButton.TabIndex = 7;
@@ -153,7 +153,7 @@
             this.Controls.Add(this.modifyRecordButton);
             this.Controls.Add(this.deleteRecordButton);
             this.Controls.Add(this.mainLabel);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
             this.Text = "Student Grade Management System";
             this.Load += new System.EventHandler(this.Form1_Load);
