@@ -19,7 +19,7 @@ namespace CSC_440_Group_Project
         /// <param name="grade">The contents of the Grade field.</param>
         /// <param name="year">The contents of the Year field.</param>
         /// <param name="semester">The contents of the Semester field.</param>
-        /// <returns>A tuple where [0] is a whether all input is valid (true/false) and [1] is the error message to display if isValid is false.</returns>
+        /// <returns>A tuple where [0] is whether all input is valid (true/false) and [1] is the error message to display if isValid is false.</returns>
         public static (bool isValid, string errorMessage) validateModifyRecordForms(string studentID, string coursePrefix, string courseNumber, string grade, string year, string semester)
         {
             // Ensure all fields have data
