@@ -32,143 +32,125 @@ namespace CSC_440_Group_Project
                 this.Close();
             }
         }
+        /*
+         *      Steps for Importing a Record
+         *      1. Gather if the record is in a file or a folder.
+         *          a. Check if the file inside the folder or the file itself is a .csv or .xlsx
+         *          b. If the file is not, send error message. 
+         *      2. Check if the file has a correct header
+         *          a. If not, send error message
+         *      3.  Read the file name and store:
+         *          a. Course Prefix
+         *          b. Course Number
+         *          c. Year
+         *          d. Semester
+         *      4. Read the file line by line- Store:
+         *          a. Student Name
+         *          b. Student ID
+         *          c. Student Grade
+         *      5. Finally Open the connection to the database and add
+         *      all of the saved information.
+         *          a. Open the Student Grades table and import.
+         *      6. Recalculate Student GPA
+         * 
+         */
 
         private void button1_Click(object sender, EventArgs e)
         {
             // Create Attributes
+            // These are taken from the file name
             string coursePrefix;
             string courseNum;
             string year;
-            string grade;
             string semester;
+
+            // These are taken from the file lines
+            string grade;
             string studentID;
             string studentName;
 
-            openFileDialog1.Filter = "CSV files (*.csv)|*.csv|XLSX files (*.xlsx)|*.xlsx";
-
-            DialogResult result = openFileDialog1.ShowDialog();
-            if (result == DialogResult.OK)
+            // Connect to the database
+            string connStr = "server=csitmariadb.eku.edu;user=student;database=csc340_db;port=3306;password=Maroon@21?;";
+            using (MySqlConnection conn = new MySqlConnection(connStr))
             {
-                // Ensure the file is an Excel file
-                string fileExtension = System.IO.Path.GetExtension(openFileDialog1.FileName);
-                if (!fileExtension.Equals(".csv") && !fileExtension.Equals(".xlsx"))
+                conn.Open();
+
+                // Only allow files with .csv or .xlsx
+                openFileDialog1.Filter = "CSV files (*.csv)|*.csv|XLSX files (*.xlsx)|*.xlsx";
+
+                DialogResult result = openFileDialog1.ShowDialog();
+                if (result == DialogResult.OK)
                 {
-                    MessageBox.Show("Invalid file type. Grades must be imported from an Excel file (.csv or .xlsx).", "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                    // Ensure the file is an Excel file
+                    string fileExtension = System.IO.Path.GetExtension(openFileDialog1.FileName);
+                    if (!fileExtension.Equals(".csv") && !fileExtension.Equals(".xlsx"))
+                    {
+                        MessageBox.Show("Invalid file type. Grades must be imported from an Excel file (.csv or .xlsx).", "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
 
-                // Ensure the filename is valid according to the specified format
-                // Following the format, [0] will be the prefix, [1] is the number, [2] is the year, [3] is the semester
-                string filenameString = Path.GetFileNameWithoutExtension(openFileDialog1.FileName);
-                string[] filename = filenameString.Split(' ');
-                if (filename.Length !=4 || filename[0].Length != 3 || filename[1].Length != 3 || filename[2].Length != 4)
-                {
-                    MessageBox.Show("Invalid file name. File name must follow the format [Course Prefix] [Course Numer] [Year] [Semester].", "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
+                    // Ensure the filename is valid according to the specified format
+                    // Following the format, [0] will be the prefix, [1] is the number, [2] is the year, [3] is the semester
+                    string filenameString = Path.GetFileNameWithoutExtension(openFileDialog1.FileName);
+                    string[] filename = filenameString.Split(' ');
+                    string[] fileRows = File.ReadAllLines(openFileDialog1.FileName);
+                    if (filename.Length != 4 || filename[0].Length != 3 || filename[1].Length != 3 || filename[2].Length != 4)
+                    {
+                        MessageBox.Show("Invalid file name. File name must follow the format [Course Prefix] [Course Numer] [Year] [Semester].", "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
 
-                // Extract the file name to their components
-                coursePrefix = filename[0];
-                courseNum = filename[1];
-                year = filename[2];
-                semester = filename[3];
+                    // Extract the file name to their components
+                    coursePrefix = filename[0];
+                    courseNum = filename[1];
+                    year = filename[2];
+                    semester = filename[3];
 
-                // Connect to the database
-                string connStr = "server=csitmariadb.eku.edu;user=student;database=csc340_db;port=3306;password=Maroon@21?;";
-                using (MySqlConnection conn = new MySqlConnection(connStr))
-                {
-                    conn.Open();
-
-                    // Add the course to the database - THIS NEEDS TO BE DONE FIRST
-                    string sql = "INSERT INTO sklc440courses (coursePrefix, courseNum, year, semester) VALUES (@coursePrefix, @courseNum, @year, @semester)";
+                    // Prep the sql statement
+                    string sql = "INSERT INTO sklc440student (studentID, studentName, coursePrefix, courseNum, grade, year, semester) VALUES (@studentID, @coursePrefix, @courseNum, @grade, @year, @semester)";
                     MySqlCommand cmd = new MySqlCommand(sql, conn);
 
-                    cmd.Parameters.AddWithValue("@coursePrefix", coursePrefix);
-                    cmd.Parameters.AddWithValue("@courseNum", courseNum);
-                    cmd.Parameters.AddWithValue("@year", year);
-                    cmd.Parameters.AddWithValue("@semester", semester);
+                    // Initialize how many cols are present for each student/row
+                    // For our case it is 3: Student Name, Student ID, and Grade
+                    int colsPerStudent = 3;
 
-                    // Check to make sure there was an update to atleast one row
-                    int rowsAffected = cmd.ExecuteNonQuery();
-                    if (rowsAffected > 0)
+                    // Start at i=1 since i=0 will be the headers
+                    for (int student = 1; student < fileRows.Length; student++)
                     {
-                        // Show grades added successfully
-                        MessageBox.Show("Grades Imported Successfully!", "Sucess", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        // Show error message to user
-                        MessageBox.Show("Failed to add Grade.", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                }
+                        Console.WriteLine(fileRows[student]);
+                        //Split the current student line into columns
+                        string[] columns = fileRows[student].Split(',');
 
-                this.Close();
-            }
-            else if (result == DialogResult.Cancel)
-            {
-
-            }
-            else
-            {
-                MessageBox.Show("Import failed, please try again.", "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            // Now we need to actually read the file
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                string filePath = openFileDialog1.FileName;
-
-                try
-                {
-                    using (StreamReader reader = new StreamReader(filePath))
-                    {
-                        string line;
-                        bool isHeader = true;
-
-                        // Connect to database
-                        string connStr = "server=csitmariadb.eku.edu;user=student;database=csc340_db;port=3306;password=Maroon@21?;";
-                        using (MySqlConnection conn = new MySqlConnection(connStr))
+                        //Ensure the student we grabbed has all 3 columns needed
+                        if (columns.Length < colsPerStudent)
                         {
-                            conn.Open();
-
-                            while ((line = reader.ReadLine()) != null)
-                            {
-                                if (isHeader) // Skip the headers
-                                {
-                                    isHeader = false;
-                                    continue;
-                                }
-
-                                string[] data = line.Split(',');
-
-                                if (data.Length != 3)
-                                {
-                                    MessageBox.Show("Invalid format. Each row must contain: Name, ID, Grade");
-                                    return;
-                                }
-
-                                studentName = data[0].Trim();
-                                studentID = data[1].Trim();
-                                grade = data[2].Trim();
-
-                                // Add to student - THIS NEEDS TO BE DONE SECOND
-                                string sql = "INSERT INTO sklc440student (studentName, studentID) VALUES (@firstName, @studentID)";
-                                using (MySqlCommand cmd = new MySqlCommand(sql, conn))
-                                {
-                                    cmd.Parameters.AddWithValue("@firstName", studentName);
-                                    cmd.Parameters.AddWithValue("@studentID", studentID);
-                                    cmd.ExecuteNonQuery();
-                                }
-
-                                // Change sql statement
-                                sql = "INSERT INTO sklc440grades (studentID, grade) VALUES (@studentID, @grade)";
-                            }
+                            MessageBox.Show($"Invalid data on line {student + 1}.", "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            continue;
                         }
+
+                        // Store each column to its own variable
+                        studentName = columns[0].Trim();
+                        studentID = columns[1].Trim();
+                        grade = columns[2].Trim();
+
+                        // Add to table
+                        cmd.Parameters.AddWithValue("@studentID", studentID);
+                        cmd.Parameters.AddWithValue("@studentName", studentName);
+                        cmd.Parameters.AddWithValue("@coursePrefix", coursePrefix);
+                        cmd.Parameters.AddWithValue("@courseNum", courseNum);
+                        cmd.Parameters.AddWithValue("@grade", grade);
+                        cmd.Parameters.AddWithValue("year", year);
+                        cmd.Parameters.AddWithValue("semester", semester);
+
+                        // clear parameters
+                        cmd.Parameters.Clear();
                     }
-                } catch (IOException ex)
+                }
+                else if (result == DialogResult.Cancel)
                 {
 
                 }
+                this.Close();
             }
         }
 
