@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI;
 
 namespace CSC_440_Group_Project
 {
@@ -76,16 +77,16 @@ namespace CSC_440_Group_Project
                 conn.Open();
 
                 // Only allow files with .csv or .xlsx
-                openFileDialog1.Filter = "CSV files (*.csv)|*.csv|XLSX files (*.xlsx)|*.xlsx";
+                openFileDialog1.Filter = "CSV files (*.csv)|*.csv";
 
                 DialogResult result = openFileDialog1.ShowDialog();
                 if (result == DialogResult.OK)
                 {
                     // Ensure the file is an Excel file
                     string fileExtension = System.IO.Path.GetExtension(openFileDialog1.FileName);
-                    if (!fileExtension.Equals(".csv") && !fileExtension.Equals(".xlsx"))
+                    if (!fileExtension.Equals(".csv"))
                     {
-                        MessageBox.Show("Invalid file type. Grades must be imported from an Excel file (.csv or .xlsx).", "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Invalid file type. Grades must be imported from an Excel file (.csv).", "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
@@ -106,9 +107,13 @@ namespace CSC_440_Group_Project
                     year = filename[2];
                     semester = filename[3];
 
-                    // Prep the sql statement
-                    string sql = "INSERT INTO sklc440student (studentID, studentName, coursePrefix, courseNum, grade, year, semester) VALUES (@studentID, @coursePrefix, @courseNum, @grade, @year, @semester)";
-                    MySqlCommand cmd = new MySqlCommand(sql, conn);
+                    // Prep the sql statement for grades
+                    string sqlGrades = "INSERT INTO sklc440grades (studentID, coursePrefix, courseNum, grade, year, semester) SELECT @studentID, @coursePrefix, @courseNum, @grade, @year, @semester WHERE NOT EXISTS (SELECT 1 FROM sklc440grades WHERE studentID = @studentID AND coursePrefix = @coursePrefix AND courseNum = @courseNum AND year = @year AND semester = @semester);";
+                    MySqlCommand cmdG = new MySqlCommand(sqlGrades, conn);
+
+                    // Prep sql statement for student
+                    string sqlStudent = "INSERT IGNORE INTO sklc440student (studentID, studentName) VALUES (@studentID, @studentName)";
+                    MySqlCommand cmdS = new MySqlCommand(sqlStudent, conn);
 
                     // Initialize how many cols are present for each student/row
                     // For our case it is 3: Student Name, Student ID, and Grade
@@ -133,17 +138,43 @@ namespace CSC_440_Group_Project
                         studentID = columns[1].Trim();
                         grade = columns[2].Trim();
 
-                        // Add to table
-                        cmd.Parameters.AddWithValue("@studentID", studentID);
-                        cmd.Parameters.AddWithValue("@studentName", studentName);
-                        cmd.Parameters.AddWithValue("@coursePrefix", coursePrefix);
-                        cmd.Parameters.AddWithValue("@courseNum", courseNum);
-                        cmd.Parameters.AddWithValue("@grade", grade);
-                        cmd.Parameters.AddWithValue("year", year);
-                        cmd.Parameters.AddWithValue("semester", semester);
+                        // Check if there is already a grade for that student for that class
 
-                        // clear parameters
-                        cmd.Parameters.Clear();
+                        // Add to grades table
+                        cmdG.Parameters.AddWithValue("@studentID", studentID);
+                        cmdG.Parameters.AddWithValue("@coursePrefix", coursePrefix);
+                        cmdG.Parameters.AddWithValue("@courseNum", courseNum);
+                        cmdG.Parameters.AddWithValue("@grade", grade);
+                        cmdG.Parameters.AddWithValue("year", year);
+                        cmdG.Parameters.AddWithValue("semester", semester);
+
+                        // Check if there is already a student for that ID
+
+                        // Add to student table
+                        cmdS.Parameters.AddWithValue("@studentID", studentID);
+                        cmdS.Parameters.AddWithValue("@studentName", studentName);
+
+                        //Execute Queries
+                        cmdG.ExecuteNonQuery();
+                        cmdS.ExecuteNonQuery();
+
+                        // clear parameters for another student
+                        cmdG.Parameters.Clear();
+                        cmdS.Parameters.Clear();
+                    }
+
+                    // Prep sql select statement for course
+                    string sqlCourse = "INSERT INTO sklc440courses (coursePrefix, courseNum, year, semester) SELECT @coursePrefix, @courseNum, @year, @semester WHERE NOT EXISTS (SELECT 1 FROM sklc440courses WHERE coursePrefix = @coursePrefix AND courseNum = @courseNum AND year = @year AND semester = @semester);";
+
+                    using (MySqlCommand cmdC = new MySqlCommand(sqlCourse, conn))
+                    {
+                        // Add to course table
+                        cmdC.Parameters.AddWithValue("@coursePrefix", coursePrefix);
+                        cmdC.Parameters.AddWithValue("@courseNum", courseNum);
+                        cmdC.Parameters.AddWithValue("@year", year);
+                        cmdC.Parameters.AddWithValue("@semester", semester);
+
+                        cmdC.ExecuteNonQuery();
                     }
                 }
                 else if (result == DialogResult.Cancel)
