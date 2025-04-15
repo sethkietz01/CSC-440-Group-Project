@@ -76,7 +76,7 @@ namespace CSC_440_Group_Project
             {
                 conn.Open();
 
-                // Only allow files with .csv or .xlsx
+                // Only allow files with .csv
                 openFileDialog1.Filter = "CSV files (*.csv)|*.csv";
 
                 DialogResult result = openFileDialog1.ShowDialog();

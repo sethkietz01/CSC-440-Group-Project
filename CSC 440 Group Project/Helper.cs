@@ -1,7 +1,9 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -66,6 +68,144 @@ namespace CSC_440_Group_Project
             // Default case
             // Should only be reached if the form is valid
             return (true, "");
+        }
+
+
+        public static double calculateGPA(string studentID, MySqlConnection conn)
+        {
+            try
+            {
+                // Get all grades for the student
+                string gradeQuery = "SELECT grade, courseNum FROM sklc440grades WHERE studentID = @studentID";
+                List<Tuple<char, string>> studentGrades = new List<Tuple<char, string>>();
+
+                using (MySqlCommand gradeCmd = new MySqlCommand(gradeQuery, conn))
+                {
+                    gradeCmd.Parameters.AddWithValue("@studentID", studentID);
+                    using (MySqlDataReader gradeReader = gradeCmd.ExecuteReader())
+                    {
+                        while (gradeReader.Read())
+                        {
+                            char grade = gradeReader.GetChar("grade");
+                            string courseNum = gradeReader.GetString("courseNum");
+                            studentGrades.Add(Tuple.Create(grade, courseNum));
+                        }
+                    }
+
+                    // Create a dictionary to store course hours
+                    Dictionary<string, int> courseHours = new Dictionary<string, int>();
+                    string courseQuery = "SELECT courseNum, hours FROM sklc440courses";
+                    using (MySqlCommand courseCmd = new MySqlCommand(courseQuery, conn))
+                    {
+                        using (MySqlDataReader courseReader = courseCmd.ExecuteReader())
+                        {
+                            while (courseReader.Read())
+                            {
+                                string courseNum = courseReader.GetString("courseNum");
+                                int hours = courseReader.GetInt32("hours");
+                                courseHours[courseNum] = hours;
+                            }
+                        } 
+                    }
+
+                    // Calculate GPA
+                    double totalGradePoints = 0;
+                    int totalAttemptedCredits = 0;
+
+                    foreach (var studentGrade in studentGrades)
+                    {
+                        char grade = studentGrade.Item1;
+                        string courseNum = studentGrade.Item2;
+
+                        if (courseHours.ContainsKey(courseNum))
+                        {
+                            int hours = courseHours[courseNum];
+                            double gradePoint = 0;
+
+                            switch (grade)
+                            {
+                                case 'A':
+                                    gradePoint = 4.0;
+                                    break;
+                                case 'B':
+                                    gradePoint = 3.0;
+                                    break;
+                                case 'C':
+                                    gradePoint = 2.0;
+                                    break;
+                                case 'D':
+                                    gradePoint = 1.0;
+                                    break;
+                                case 'F':
+                                    gradePoint = 0.0;
+                                    break;
+                                default:
+                                    hours = 0;
+                                    break;
+                            }
+
+                            totalGradePoints += gradePoint * hours;
+                            totalAttemptedCredits += hours;
+                        }
+                    }
+
+                    // Calculate and return GPA
+                    if (totalAttemptedCredits > 0)
+                        return totalGradePoints / totalAttemptedCredits;
+                    else
+                        return 0.0;
+                }
+            }
+            catch (MySqlException ex)
+            {
+                // Handle database connection or query errors
+                Console.WriteLine($"Error in calculateGPA: {ex.Message}");
+                return -1.0; // Or throw an exception
+            }
+        }
+
+        public static void updateGPA(string studentID)
+        {
+            // Connect to the database
+            string connStr = "server=csitmariadb.eku.edu;user=student;database=csc340_db;port=3306;password=Maroon@21?;";
+
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open(); // Open the connection once here
+
+                    double gpa = calculateGPA(studentID, conn); // Pass the open connection
+
+                    // Update the Student table with the calculated GPA
+                    string updateQuery = "UPDATE sklc440student SET GPA = @gpa WHERE studentID = @studentID";
+                    using (MySqlCommand updateCmd = new MySqlCommand(updateQuery, conn))
+                    {
+                        updateCmd.Parameters.AddWithValue("@gpa", gpa);
+                        updateCmd.Parameters.AddWithValue("@studentID", studentID);
+
+                        int rowsAffected = updateCmd.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            Console.WriteLine($"GPA updated successfully for student ID: {studentID}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"No student found with ID: {studentID} to update GPA.");
+                        }
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    // Handle database connection or query errors
+                    Console.WriteLine($"Error updating GPA: {ex.Message}");
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
         }
     }
 }
