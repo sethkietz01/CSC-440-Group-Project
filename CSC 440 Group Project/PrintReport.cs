@@ -1,7 +1,10 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -40,22 +43,81 @@ namespace CSC_440_Group_Project
              *      5. Return to the main menu
              */
 
-            //This should only be displayed if there is no matching student ID in the database
-            MessageBox.Show("Student 901888777 could not be found in the database.", "Print Transcript Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            // Connect to the database
+            string connStr = "server=csitmariadb.eku.edu;user=student;database=csc340_db;port=3306;password=Maroon@21?;";
+
+            string studentID = textBox1.Text.Trim();
+
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open(); // Open the connection once here
+
+                    string gradeQuery = @"
+                                    SELECT
+                                        g.coursePrefix,
+                                        g.courseNum,
+                                        g.grade,
+                                        g.semester,
+                                        g.year,
+                                        s.GPA
+                                    FROM
+                                        sklc440grades g
+                                    JOIN
+                                        sklc440student s ON g.studentID = s.studentID
+                                    WHERE
+                                        g.studentID = @StudentID;"
+                    ;
+
+                    using (MySqlCommand command = new MySqlCommand(gradeQuery, conn))
+                    {
+                        command.Parameters.AddWithValue("@StudentID", studentID);
+
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            bool firstRecord = true;
+                            decimal studentGPA = -1;
 
 
-            // This should only be displayed upon successful record retrieval
-            //      Note that the data is currently hard-coded in for demonstration
-            //      purposes, but will be parsed from the records in practice
-            string message = "Transcript for Student 901888777" +
-                "\n\nCourse\tSemester\t\tGrade" +
-                "\nCSC 340\tSpring, 2024\tB" +
-                "\nCSC 440\tSpring, 2025\tA" +
-                "\n\nCumulative GPA: 3.50";
+                            string transcript = "Transcript for Student " + studentID + "\n\nCourse\tSemester\t\tGrade";
 
-            MessageBox.Show(message, "Print Transcript Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            while (reader.Read())
+                            {
+                                if (firstRecord)
+                                {
+                                    studentGPA = reader.GetDecimal(reader.GetOrdinal("GPA"));
+                                    firstRecord = false;
+                                }
 
-            this.Close();
+                                string courseInfo = reader["coursePrefix"].ToString() + " " + reader["courseNum"].ToString();
+                                string semesterYear = reader["semester"].ToString() + " " + reader["year"].ToString();
+                                string grade = reader["grade"].ToString();
+
+                                transcript += "\n" + courseInfo + "\t" + semesterYear + "\t\t" + grade;
+                            }
+
+                            if (studentGPA != -1)
+                            {
+                                transcript += $"\n\nCumulative GPA: {studentGPA}";
+                                MessageBox.Show(transcript, "Print Transcript Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            }
+                            else
+                            {
+                                MessageBox.Show($"No grade records found for student ID: {studentID}", "Print Transcript Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    Console.WriteLine($"Error printing transcript: {ex.Message}");
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
