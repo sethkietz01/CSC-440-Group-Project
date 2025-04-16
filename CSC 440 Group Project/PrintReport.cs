@@ -52,7 +52,7 @@ namespace CSC_440_Group_Project
             {
                 try
                 {
-                    conn.Open(); // Open the connection once here
+                    conn.Open();
 
                     string gradeQuery = @"
                                     SELECT
@@ -91,7 +91,7 @@ namespace CSC_440_Group_Project
                                 }
 
                                 string courseInfo = reader["coursePrefix"].ToString() + " " + reader["courseNum"].ToString();
-                                string semesterYear = reader["semester"].ToString() + " " + reader["year"].ToString();
+                                string semesterYear = reader["semester"].ToString() + ", " + reader["year"].ToString();
                                 string grade = reader["grade"].ToString();
 
                                 transcript += "\n" + courseInfo + "\t" + semesterYear + "\t\t" + grade;

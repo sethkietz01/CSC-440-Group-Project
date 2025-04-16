@@ -164,47 +164,40 @@ namespace CSC_440_Group_Project
             }
         }
 
-        public static void updateGPA(string studentID)
+        public static void updateGPA(string studentID, MySqlConnection conn)
         {
-            // Connect to the database
-            string connStr = "server=csitmariadb.eku.edu;user=student;database=csc340_db;port=3306;password=Maroon@21?;";
-
-            using (MySqlConnection conn = new MySqlConnection(connStr))
+            try
             {
-                try
+
+                double gpa = calculateGPA(studentID, conn); // Pass the open connection
+
+                // Update the Student table with the calculated GPA
+                string updateQuery = "UPDATE sklc440student SET GPA = @gpa WHERE studentID = @studentID";
+                using (MySqlCommand updateCmd = new MySqlCommand(updateQuery, conn))
                 {
-                    conn.Open(); // Open the connection once here
+                    updateCmd.Parameters.AddWithValue("@gpa", gpa);
+                    updateCmd.Parameters.AddWithValue("@studentID", studentID);
 
-                    double gpa = calculateGPA(studentID, conn); // Pass the open connection
+                    int rowsAffected = updateCmd.ExecuteNonQuery();
 
-                    // Update the Student table with the calculated GPA
-                    string updateQuery = "UPDATE sklc440student SET GPA = @gpa WHERE studentID = @studentID";
-                    using (MySqlCommand updateCmd = new MySqlCommand(updateQuery, conn))
+                    if (rowsAffected > 0)
                     {
-                        updateCmd.Parameters.AddWithValue("@gpa", gpa);
-                        updateCmd.Parameters.AddWithValue("@studentID", studentID);
-
-                        int rowsAffected = updateCmd.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
-                        {
-                            Console.WriteLine($"GPA updated successfully for student ID: {studentID}");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"No student found with ID: {studentID} to update GPA.");
-                        }
+                        Console.WriteLine($"GPA updated successfully for student ID: {studentID}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"No student found with ID: {studentID} to update GPA.");
                     }
                 }
-                catch (MySqlException ex)
-                {
-                    // Handle database connection or query errors
-                    Console.WriteLine($"Error updating GPA: {ex.Message}");
-                }
-                finally
-                {
-                    conn.Close();
-                }
+            }
+            catch (MySqlException ex)
+            {
+                // Handle database connection or query errors
+                Console.WriteLine($"Error updating GPA: {ex.Message}");
+            }
+            finally
+            {
+                conn.Close();
             }
         }
     }

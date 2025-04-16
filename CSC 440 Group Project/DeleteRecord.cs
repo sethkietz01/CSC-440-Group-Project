@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -25,43 +26,95 @@ namespace CSC_440_Group_Project
                 MessageBox.Show(errorMessage, "Delete Record Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
             {
-                /*
-                 *      Need code here to attempt deleting the grade to the database
-                 *      1. Query the database to make sure the requested record to delete exists
-                 *          If the record does not exists
-                 *          1.1 Display an error message
-                 *          1.2 Return to the main menu (DO NOT PROCEED)
-                 *      2. Retrieve the record from the database
-                 *      3. Display the retrieved record to the user, prompting to confirm the deletion
-                 *          If the user presses cancel
-                 *          3.1 Cancel current action
-                 *          3.2 Display the input form again
-                 *      4. Delete the record from the database
-                 *      5. Update the student's GPA
-                 *      6. Display a confirmation message
-                 *      7. Return to the main menu
-                 *      
-                 */
+                // Connect to the database
+                string connStr = "server=csitmariadb.eku.edu;user=student;database=csc340_db;port=3306;password=Maroon@21?;";
 
-                // This should only be displayed if the requested record does not exists in the database
-                MessageBox.Show("The requested record does not exist in the database.", "Delete Record Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                using (MySqlConnection conn = new MySqlConnection(connStr))
+                {
+                    try
+                    {
+                        conn.Open();
 
-                // This should be displayed when the record is retrieved from the database
-                //      Note that the data is currently hard-coded in for demonstration
-                //      purposes, but will be parsed from the record in practice
-                string message = "Confirm the deletion of this record:" +
-                    "\nStudent ID: 901888777" +
-                    "\nCourse: CSC 440" +
-                    "\nGrade: A" +
-                    "\nSpring, 2025";
-                MessageBox.Show(message, "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                        // Query the database to make sure the requested record to delete exists
+                        string selectQuery = "SELECT StudentID, CoursePrefix, CourseNum, Grade, Year, Semester FROM sklc440grades WHERE StudentID = @StudentID AND CoursePrefix = @CoursePrefix AND CourseNum = @CourseNum AND Year = @Year AND Semester = @Semester";
+                        MySqlCommand selectCmd = new MySqlCommand(selectQuery, conn);
+                        selectCmd.Parameters.AddWithValue("@StudentID", StudentIDIn.Text);
+                        selectCmd.Parameters.AddWithValue("@CoursePrefix", CoursePrefixIn.Text);
+                        selectCmd.Parameters.AddWithValue("@CourseNum", CourseNumIn.Text);
+                        selectCmd.Parameters.AddWithValue("@Year", YearIn.Text);
+                        selectCmd.Parameters.AddWithValue("@Semester", SemesterIn.Text);
 
-                // This should only be displayed if the add is actually successful, not just if the form is valid
-                MessageBox.Show("Record successfully deleted.", "Delete Record Succeeded", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        bool recordExists = false;
+                        string studentIDToDelete = "";
+                        using (MySqlDataReader reader = selectCmd.ExecuteReader())
+                        {
+                            // If there is no matching record, stop the transaction
+                            if (!reader.HasRows)
+                            {
+                                MessageBox.Show("The requested record does not exist in the database.", "Delete Record Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                return;
+                            }
 
+                            // Retrieve the record from the database
+                            reader.Read();
+                            studentIDToDelete = reader["StudentID"].ToString();
+                            string coursePrefix = reader["CoursePrefix"].ToString();
+                            string courseNum = reader["CourseNum"].ToString();
+                            string grade = reader["Grade"].ToString();
+                            string year = reader["Year"].ToString();
+                            string semester = reader["Semester"].ToString();
+                            recordExists = true;
 
+                            // Display the retrieved record to the user, prompting to confirm the deletion
+                            string message = "Confirm the deletion of this record:" +
+                                             "\nStudent ID: " + studentIDToDelete +
+                                             "\nCourse: " + coursePrefix + " " + courseNum +
+                                             "\nGrade: " + grade +
+                                             "\n" + semester + ", " + year;
 
-                this.Close();
+                            DialogResult result = MessageBox.Show(message, "Confirm Deletion", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                            // If the user presses cancel, stop the transaction
+                            if (result == DialogResult.No)
+                                return;
+                        } 
+
+                        if (recordExists)
+                        {
+                            // Delete the record from the database
+                            string deleteQuery = "DELETE FROM sklc440grades WHERE StudentID = @StudentID AND CoursePrefix = @CoursePrefix AND CourseNum = @CourseNum AND Year = @Year AND Semester = @Semester";
+                            using (MySqlCommand deleteCmd = new MySqlCommand(deleteQuery, conn))
+                            {
+                                deleteCmd.Parameters.AddWithValue("@StudentID", StudentIDIn.Text);
+                                deleteCmd.Parameters.AddWithValue("@CoursePrefix", CoursePrefixIn.Text);
+                                deleteCmd.Parameters.AddWithValue("@CourseNum", CourseNumIn.Text);
+                                deleteCmd.Parameters.AddWithValue("@Year", YearIn.Text);
+                                deleteCmd.Parameters.AddWithValue("@Semester", SemesterIn.Text);
+
+                                int rowsAffected = deleteCmd.ExecuteNonQuery();
+
+                                // If the deletion was successful, update the student's GPA, display a confirmation message, and return to the main menu
+                                if (rowsAffected > 0)
+                                {
+                                    Helper.updateGPA(studentIDToDelete, conn);
+                                    MessageBox.Show("Record successfully deleted.", "Delete Record Succeeded", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    this.Close();
+                                }
+                                else
+                                    MessageBox.Show("Failed to delete the record.", "Delete Record Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
+                    }
+                    catch (MySqlException ex)
+                    {
+                        Console.WriteLine($"Error deleting record: {ex.Message}");
+                        MessageBox.Show($"Database error: {ex.Message}", "Delete Record Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
             }
         }
 
