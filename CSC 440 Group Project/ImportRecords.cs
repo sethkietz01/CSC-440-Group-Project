@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -131,7 +132,8 @@ namespace CSC_440_Group_Project
                 // Call Import Records Here
                 ImportRecordsFromFile(fileRows, filename);
                 MessageBox.Show("Grades have been successfully imported.", "Import Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+
+                }
                 else if (result == DialogResult.Cancel)
                 {
 
@@ -176,6 +178,8 @@ namespace CSC_440_Group_Project
                 year = filename[2];
                 semester = filename[3];
 
+
+
                 // Prep the sql statement for grades
                 string sqlGrades = "INSERT INTO sklc440grades (studentID, coursePrefix, courseNum, grade, year, semester) SELECT @studentID, @coursePrefix, @courseNum, @grade, @year, @semester WHERE NOT EXISTS (SELECT 1 FROM sklc440grades WHERE studentID = @studentID AND coursePrefix = @coursePrefix AND courseNum = @courseNum AND year = @year AND semester = @semester);";
                 MySqlCommand cmdG = new MySqlCommand(sqlGrades, conn);
@@ -207,8 +211,6 @@ namespace CSC_440_Group_Project
                     studentID = columns[1].Trim();
                     grade = columns[2].Trim();
 
-                    // Check if there is already a grade for that student for that class
-
                     // Add to grades table
                     cmdG.Parameters.AddWithValue("@studentID", studentID);
                     cmdG.Parameters.AddWithValue("@coursePrefix", coursePrefix);
@@ -233,7 +235,9 @@ namespace CSC_440_Group_Project
                 }
 
                 // Prep sql select statement for course
-                string sqlCourse = "INSERT INTO sklc440courses (coursePrefix, courseNum, year, semester) SELECT @coursePrefix, @courseNum, @year, @semester WHERE NOT EXISTS (SELECT 1 FROM sklc440courses WHERE coursePrefix = @coursePrefix AND courseNum = @courseNum AND year = @year AND semester = @semester);";
+                string sqlCourse = "INSERT INTO sklc440courses (coursePrefix, courseNum, year, semester, hours) SELECT @coursePrefix, @courseNum, @year, @semester, @hours WHERE NOT EXISTS (SELECT 1 FROM sklc440courses WHERE coursePrefix = @coursePrefix AND courseNum = @courseNum AND year = @year AND semester = @semester AND hours = @hours);";
+
+                string hours = InputHours();
 
                 using (MySqlCommand cmdC = new MySqlCommand(sqlCourse, conn))
                 {
@@ -242,10 +246,43 @@ namespace CSC_440_Group_Project
                     cmdC.Parameters.AddWithValue("@courseNum", courseNum);
                     cmdC.Parameters.AddWithValue("@year", year);
                     cmdC.Parameters.AddWithValue("@semester", semester);
+                    cmdC.Parameters.AddWithValue("@hours", hours);
 
                     cmdC.ExecuteNonQuery();
+
                 }
             }
+        }
+
+        // Input hours method is only called when there is a new course added to the database that was not there previously
+        // It does not take any parameters and returns a string of the course hours.
+        // Its a small popup.
+        private string InputHours()
+        {
+            // New course was added - Need to gather the hours for the course
+            Form hoursPromptForm = new Form()
+            {
+                Width = 350,
+                Height = 200,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = "Course Hours",
+                StartPosition = FormStartPosition.CenterScreen,
+                MinimizeBox = false,
+                MaximizeBox = false
+            };
+
+            Label inputHoursLabel = new Label() { Left = 10, Top = 10, Text = "Enter the number of hours for the course:", AutoSize = true };
+            TextBox inputHoursTextBox = new TextBox() { Left = 10, Top = 35, Width = 300 };
+
+            Button confirmation = new Button() { Text = "OK", Left = 220, Width = 90, Top = 70, DialogResult = DialogResult.OK };
+            hoursPromptForm.AcceptButton = confirmation;
+
+            hoursPromptForm.Controls.Add(inputHoursLabel);
+            hoursPromptForm.Controls.Add(inputHoursTextBox);
+            hoursPromptForm.Controls.Add(confirmation);
+
+            DialogResult result = hoursPromptForm.ShowDialog();
+            return result == DialogResult.OK ? inputHoursTextBox.Text : null;
         }
     }
 }
