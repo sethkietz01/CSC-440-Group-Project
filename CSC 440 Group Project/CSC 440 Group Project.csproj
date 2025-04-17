@@ -104,6 +104,7 @@
     <Compile Include="AddRecord.Designer.cs">
       <DependentUpon>AddRecord.cs</DependentUpon>
     </Compile>
+    <Compile Include="DatabaseHandler.cs" />
     <Compile Include="DeleteRecord.cs">
       <SubType>Form</SubType>
     </Compile>
