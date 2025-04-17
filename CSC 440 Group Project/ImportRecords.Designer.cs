@@ -39,10 +39,10 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(135, 142);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Location = new System.Drawing.Point(91, 92);
+            this.button1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(104, 35);
+            this.button1.Size = new System.Drawing.Size(69, 23);
             this.button1.TabIndex = 0;
             this.button1.Text = "From File";
             this.button1.UseVisualStyleBackColor = true;
@@ -51,10 +51,10 @@
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(352, 142);
-            this.button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button2.Location = new System.Drawing.Point(235, 92);
+            this.button2.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(104, 35);
+            this.button2.Size = new System.Drawing.Size(88, 23);
             this.button2.TabIndex = 1;
             this.button2.Text = "From Folder";
             this.button2.UseVisualStyleBackColor = true;
@@ -65,10 +65,10 @@
             this.mainLabel.AutoSize = true;
             this.mainLabel.Font = new System.Drawing.Font("Yu Gothic UI", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mainLabel.ForeColor = System.Drawing.Color.White;
-            this.mainLabel.Location = new System.Drawing.Point(124, 45);
-            this.mainLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.mainLabel.Location = new System.Drawing.Point(83, 29);
+            this.mainLabel.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
             this.mainLabel.Name = "mainLabel";
-            this.mainLabel.Size = new System.Drawing.Size(353, 65);
+            this.mainLabel.Size = new System.Drawing.Size(240, 45);
             this.mainLabel.TabIndex = 2;
             this.mainLabel.Text = "Import Records";
             this.mainLabel.Click += new System.EventHandler(this.mainLabel_Click);
@@ -80,10 +80,10 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(243, 242);
-            this.button3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button3.Location = new System.Drawing.Point(162, 157);
+            this.button3.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(94, 35);
+            this.button3.Size = new System.Drawing.Size(63, 23);
             this.button3.TabIndex = 3;
             this.button3.Text = "Cancel";
             this.button3.UseVisualStyleBackColor = true;
@@ -91,15 +91,15 @@
             // 
             // importRecords
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.ClientSize = new System.Drawing.Size(600, 360);
+            this.ClientSize = new System.Drawing.Size(400, 234);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.mainLabel);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
             this.Name = "importRecords";
             this.Text = "Import Records";
             this.ResumeLayout(false);
