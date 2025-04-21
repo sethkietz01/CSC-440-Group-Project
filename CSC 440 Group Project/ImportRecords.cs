@@ -79,29 +79,6 @@ namespace CSC_440_Group_Project
             }
         }
 
-        /*
-         *      Steps for Importing a Record
-         *      1. Gather if the record is in a file or a folder.
-         *          a. Check if the file inside the folder or the file itself is a .csv or .xlsx
-         *          b. If the file is not, send error message. 
-         *      2. Check if the file has a correct header
-         *          a. If not, send error message
-         *      3.  Read the file name and store:
-         *          a. Course Prefix
-         *          b. Course Number
-         *          c. Year
-         *          d. Semester
-         *      4. Read the file line by line- Store:
-         *          a. Student Name
-         *          b. Student ID
-         *          c. Student Grade
-         *      5. Finally Open the connection to the database and add
-         *      all of the saved information.
-         *          a. Open the Student Grades table and import.
-         *      6. Recalculate Student GPA
-         * 
-         */
-
         private void button1_Click(object sender, EventArgs e)
         {
                 // Only allow files with .csv

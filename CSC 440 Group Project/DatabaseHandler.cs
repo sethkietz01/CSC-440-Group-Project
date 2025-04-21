@@ -14,6 +14,21 @@ namespace CSC_440_Group_Project
 
         public void addRecord(string studentID, string coursePrefix, string courseNum, string grade, string year, string semester)
         {
+            // Don't allow a grade record with a future year
+            if (int.Parse(year) > System.DateTime.Now.Year)
+                return;
+
+            // Don't allow a grade record with a future semester
+            if (semester == "Fall" && System.DateTime.Now.Month < 12)
+                return;
+
+            if (semester == "Summer" && System.DateTime.Now.Month < 8)
+                return;
+
+            if (semester == "Spring" && System.DateTime.Now.Month < 5)
+                return;
+
+
             // Connect to the database
             string connStr = "server=csitmariadb.eku.edu;user=student;database=csc340_db;port=3306;password=Maroon@21?;";
 
