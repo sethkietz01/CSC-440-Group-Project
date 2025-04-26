@@ -10,8 +10,14 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace CSC_440_Group_Project
 {
+    /// <summary>
+    /// Performs all database interactions
+    /// </summary>
     internal class DatabaseHandler
     {
+        /// <summary>
+        /// Imports grade records from a folder that contains one or more .CSV file(s)
+        /// </summary>
         public void ImportRecordsFolder()
         {
             // Allow the user to select a folder from their desktop
@@ -68,7 +74,11 @@ namespace CSC_440_Group_Project
             }
         }
 
-        // The ImportRecordsFromFile method takes the file name and the rows of the file and imports the records into the database.
+        /// <summary>
+        /// Takes imports the grade records in a .CSV file into the database.
+        /// </summary>
+        /// <param name="fileRows">The number of grade records in the file</param>
+        /// <param name="filename">The name of the file of grade records</param>
         public void ImportRecordsFromFile(String[] fileRows, String[] filename)
         {
             // Create Attributes
@@ -171,9 +181,10 @@ namespace CSC_440_Group_Project
             }
         }
 
-        // Input hours method is only called when there is a new course added to the database that was not there previously
-        // It does not take any parameters and returns a string of the course hours.
-        // Its a small popup.
+        /// <summary>
+        /// Gets the number of credit hours for a new course from user keyboard input
+        /// </summary>
+        /// <returns>The course's credit hours</returns>
         private string InputHours()
         {
             // New course was added - Need to gather the hours for the course
@@ -202,6 +213,15 @@ namespace CSC_440_Group_Project
             return result == DialogResult.OK ? inputHoursTextBox.Text : null;
         }
 
+        /// <summary>
+        /// Adds a single grade record to the database
+        /// </summary>
+        /// <param name="studentID">The target student's ID</param>
+        /// <param name="coursePrefix">The prefix of the course to of thegrade record for</param>
+        /// <param name="courseNum">The identifing number of the course of the grade record for</param>
+        /// <param name="grade">The grade that the student received</param>
+        /// <param name="year">The year that the course was taken</param>
+        /// <param name="semester">The semester that the course was taken</param>
         public void addRecord(string studentID, string coursePrefix, string courseNum, string grade, string year, string semester)
         {
             // Don't allow a grade record with a future year
@@ -264,7 +284,7 @@ namespace CSC_440_Group_Project
                         // If the add was successful, update the GPA for the student and display a confirmation message
                         if (rowsAffected > 0)
                         {
-                            Helper.updateGPA(studentID, conn);
+                            updateGPA(studentID, conn);
 
                             MessageBox.Show("Record successfully added.", "Add Record Succeeded", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
@@ -284,6 +304,15 @@ namespace CSC_440_Group_Project
             }
         }
 
+        /// <summary>
+        /// Deletes a grade record from the database
+        /// </summary>
+        /// <param name="studentID">The target student's ID</param>
+        /// <param name="coursePrefix">The prefix of the course to of thegrade record for</param>
+        /// <param name="courseNum">The identifing number of the course of the grade record for</param>
+        /// <param name="grade">The grade that the student received</param>
+        /// <param name="year">The year that the course was taken</param>
+        /// <param name="semester">The semester that the course was taken</param>
         public void deleteRecord(string studentID, string coursePrefix, string courseNum, string grade, string year, string semester)
         {
             // Connect to the database
@@ -356,7 +385,7 @@ namespace CSC_440_Group_Project
                             // If the deletion was successful, update the student's GPA, display a confirmation message, and return to the main menu
                             if (rowsAffected > 0)
                             {
-                                Helper.updateGPA(studentIDToDelete, conn);
+                                updateGPA(studentIDToDelete, conn);
                                 MessageBox.Show("Record successfully deleted.", "Delete Record Succeeded", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                             else
@@ -376,6 +405,15 @@ namespace CSC_440_Group_Project
             }
         }
 
+        /// <summary>
+        /// Modifies the grade received for a specific grade record
+        /// </summary>
+        /// <param name="studentID">The target student's ID</param>
+        /// <param name="coursePrefix">The prefix of the course to of thegrade record for</param>
+        /// <param name="courseNum">The identifing number of the course of the grade record for</param>
+        /// <param name="grade">The grade that the student received</param>
+        /// <param name="year">The year that the course was taken</param>
+        /// <param name="semester">The semester that the course was taken</param>
         public void modifyRecord(string studentID, string coursePrefix, string courseNum, string grade, string year, string semester)
         {
             // Connect to the database
@@ -445,7 +483,7 @@ namespace CSC_440_Group_Project
 
                         if (rowsAffected > 0)
                         {
-                            Helper.updateGPA(studentID, conn);
+                            updateGPA(studentID, conn);
                             MessageBox.Show("Record successfully modified.", "Modify Record Succeeded", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
@@ -464,6 +502,10 @@ namespace CSC_440_Group_Project
             }
         }
 
+        /// <summary>
+        /// Prints the GPA and all grade records for a specific student
+        /// </summary>
+        /// <param name="studentID">The target student's ID</param>
         public void printTranscript(string studentID)
         {
             // Connect to the database
@@ -538,6 +580,141 @@ namespace CSC_440_Group_Project
                 {
                     conn.Close();
                 }
+            }
+        }
+        /// <summary>
+        /// Calcualtes the cumulative GPA for a student
+        /// </summary>
+        /// <param name="studentID"></param>
+        /// <param name="conn"></param>
+        /// <returns></returns>
+        public static double calculateGPA(string studentID, MySqlConnection conn)
+        {
+            try
+            {
+                // Get all grades for the student
+                string gradeQuery = "SELECT grade, courseNum FROM sklc440grades WHERE studentID = @studentID";
+                List<Tuple<char, string>> studentGrades = new List<Tuple<char, string>>();
+
+                using (MySqlCommand gradeCmd = new MySqlCommand(gradeQuery, conn))
+                {
+                    gradeCmd.Parameters.AddWithValue("@studentID", studentID);
+                    using (MySqlDataReader gradeReader = gradeCmd.ExecuteReader())
+                    {
+                        while (gradeReader.Read())
+                        {
+                            char grade = gradeReader.GetChar("grade");
+                            string courseNum = gradeReader.GetString("courseNum");
+                            studentGrades.Add(Tuple.Create(grade, courseNum));
+                        }
+                    }
+
+                    // Create a dictionary to store course hours
+                    Dictionary<string, int> courseHours = new Dictionary<string, int>();
+                    string courseQuery = "SELECT courseNum, hours FROM sklc440courses";
+                    using (MySqlCommand courseCmd = new MySqlCommand(courseQuery, conn))
+                    {
+                        using (MySqlDataReader courseReader = courseCmd.ExecuteReader())
+                        {
+                            while (courseReader.Read())
+                            {
+                                string courseNum = courseReader.GetString("courseNum");
+                                int hours = courseReader.GetInt32("hours");
+                                courseHours[courseNum] = hours;
+                            }
+                        }
+                    }
+
+                    // Calculate GPA
+                    double totalGradePoints = 0;
+                    int totalAttemptedCredits = 0;
+
+                    foreach (var studentGrade in studentGrades)
+                    {
+                        char grade = studentGrade.Item1;
+                        string courseNum = studentGrade.Item2;
+
+                        if (courseHours.ContainsKey(courseNum))
+                        {
+                            int hours = courseHours[courseNum];
+                            double gradePoint = 0;
+
+                            switch (grade)
+                            {
+                                case 'A':
+                                    gradePoint = 4.0;
+                                    break;
+                                case 'B':
+                                    gradePoint = 3.0;
+                                    break;
+                                case 'C':
+                                    gradePoint = 2.0;
+                                    break;
+                                case 'D':
+                                    gradePoint = 1.0;
+                                    break;
+                                case 'F':
+                                    gradePoint = 0.0;
+                                    break;
+                                default:
+                                    hours = 0;
+                                    break;
+                            }
+
+                            totalGradePoints += gradePoint * hours;
+                            totalAttemptedCredits += hours;
+                        }
+                    }
+
+                    // Calculate and return GPA
+                    if (totalAttemptedCredits > 0)
+                        return totalGradePoints / totalAttemptedCredits;
+                    else
+                        return 0.0;
+                }
+            }
+            catch (MySqlException ex)
+            {
+                // Handle database connection or query errors
+                Console.WriteLine($"Error in calculateGPA: {ex.Message}");
+                return -1.0; // Or throw an exception
+            }
+        }
+
+        public static void updateGPA(string studentID, MySqlConnection conn)
+        {
+            try
+            {
+
+                double gpa = calculateGPA(studentID, conn); // Pass the open connection
+
+                // Update the Student table with the calculated GPA
+                string updateQuery = "UPDATE sklc440student SET GPA = @gpa WHERE studentID = @studentID";
+                using (MySqlCommand updateCmd = new MySqlCommand(updateQuery, conn))
+                {
+                    updateCmd.Parameters.AddWithValue("@gpa", gpa);
+                    updateCmd.Parameters.AddWithValue("@studentID", studentID);
+
+                    int rowsAffected = updateCmd.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine($"GPA updated successfully for student ID: {studentID}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"No student found with ID: {studentID} to update GPA.");
+                    }
+                }
+            }
+            catch (MySqlException ex)
+            {
+                // Handle database connection or query errors
+                Console.WriteLine($"Error updating GPA: {ex.Message}");
+            }
+            finally
+            {
+                conn.Close();
             }
         }
     }
