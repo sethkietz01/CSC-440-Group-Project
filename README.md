@@ -12,5 +12,5 @@ This project is built using C# Windows forms .NET for frontend and backend desig
 Each form is contained in its own .cs file. The driver form is MainMenu.cs and the most-utilized classes are DatabaseHandler (performs all interactions with the database) and Helper (provides input validation methods).
 
 ## Contributors
-@Pixxilated
-@sethkietz01
+[Leslie Cunningham](https://github.com/Pixxilated)  
+[Seth Kietz](https://gihub.com/sethkietz01)
