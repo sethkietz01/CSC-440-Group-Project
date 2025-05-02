@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.submitModifyButton = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -41,28 +41,28 @@
             this.CourseNumIn = new System.Windows.Forms.TextBox();
             this.CoursePrefixIn = new System.Windows.Forms.TextBox();
             this.StudentIDIn = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.cancelModifyButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // submitModifyButton
             // 
-            this.button1.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(128, 170);
-            this.button1.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(53, 20);
-            this.button1.TabIndex = 25;
-            this.button1.Text = "Submit";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.submitModifyButton.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.submitModifyButton.Location = new System.Drawing.Point(192, 262);
+            this.submitModifyButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.submitModifyButton.Name = "submitModifyButton";
+            this.submitModifyButton.Size = new System.Drawing.Size(80, 31);
+            this.submitModifyButton.TabIndex = 25;
+            this.submitModifyButton.Text = "Submit";
+            this.submitModifyButton.UseVisualStyleBackColor = true;
+            this.submitModifyButton.Click += new System.EventHandler(this.submitModifyButton_Click);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(228, 88);
-            this.label6.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.label6.Location = new System.Drawing.Point(342, 135);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(113, 32);
             this.label6.TabIndex = 24;
@@ -73,8 +73,8 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.White;
-            this.label5.Location = new System.Drawing.Point(258, 65);
-            this.label5.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.label5.Location = new System.Drawing.Point(387, 100);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(58, 32);
             this.label5.TabIndex = 23;
@@ -85,21 +85,20 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.White;
-            this.label4.Location = new System.Drawing.Point(215, 38);
-            this.label4.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.label4.Location = new System.Drawing.Point(322, 58);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(132, 32);
             this.label4.TabIndex = 22;
             this.label4.Text = "New Grade";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(1, 88);
-            this.label3.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.label3.Location = new System.Drawing.Point(2, 135);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(183, 32);
             this.label3.TabIndex = 21;
@@ -110,8 +109,8 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(21, 68);
-            this.label2.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.label2.Location = new System.Drawing.Point(32, 105);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(153, 32);
             this.label2.TabIndex = 20;
@@ -122,8 +121,8 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Yu Gothic UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(37, 39);
-            this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.label1.Location = new System.Drawing.Point(56, 60);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(128, 32);
             this.label1.TabIndex = 19;
@@ -131,78 +130,72 @@
             // 
             // SemesterIn
             // 
-            this.SemesterIn.Location = new System.Drawing.Point(301, 94);
-            this.SemesterIn.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.SemesterIn.Location = new System.Drawing.Point(452, 145);
+            this.SemesterIn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.SemesterIn.Name = "SemesterIn";
-            this.SemesterIn.Size = new System.Drawing.Size(83, 20);
+            this.SemesterIn.Size = new System.Drawing.Size(122, 26);
             this.SemesterIn.TabIndex = 18;
-            this.SemesterIn.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
             // 
             // YearIn
             // 
-            this.YearIn.Location = new System.Drawing.Point(301, 68);
-            this.YearIn.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.YearIn.Location = new System.Drawing.Point(452, 105);
+            this.YearIn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.YearIn.Name = "YearIn";
-            this.YearIn.Size = new System.Drawing.Size(83, 20);
+            this.YearIn.Size = new System.Drawing.Size(122, 26);
             this.YearIn.TabIndex = 17;
-            this.YearIn.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
             // 
             // GradeIn
             // 
-            this.GradeIn.Location = new System.Drawing.Point(301, 43);
-            this.GradeIn.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.GradeIn.Location = new System.Drawing.Point(452, 66);
+            this.GradeIn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.GradeIn.Name = "GradeIn";
-            this.GradeIn.Size = new System.Drawing.Size(83, 20);
+            this.GradeIn.Size = new System.Drawing.Size(122, 26);
             this.GradeIn.TabIndex = 16;
-            this.GradeIn.TextChanged += new System.EventHandler(this.textBox4_TextChanged);
             // 
             // CourseNumIn
             // 
-            this.CourseNumIn.Location = new System.Drawing.Point(125, 94);
-            this.CourseNumIn.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.CourseNumIn.Location = new System.Drawing.Point(188, 145);
+            this.CourseNumIn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.CourseNumIn.Name = "CourseNumIn";
-            this.CourseNumIn.Size = new System.Drawing.Size(86, 20);
+            this.CourseNumIn.Size = new System.Drawing.Size(127, 26);
             this.CourseNumIn.TabIndex = 15;
-            this.CourseNumIn.TextChanged += new System.EventHandler(this.textBox3_TextChanged);
             // 
             // CoursePrefixIn
             // 
-            this.CoursePrefixIn.Location = new System.Drawing.Point(125, 70);
-            this.CoursePrefixIn.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.CoursePrefixIn.Location = new System.Drawing.Point(188, 108);
+            this.CoursePrefixIn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.CoursePrefixIn.Name = "CoursePrefixIn";
-            this.CoursePrefixIn.Size = new System.Drawing.Size(86, 20);
+            this.CoursePrefixIn.Size = new System.Drawing.Size(127, 26);
             this.CoursePrefixIn.TabIndex = 14;
-            this.CoursePrefixIn.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
             // 
             // StudentIDIn
             // 
-            this.StudentIDIn.Location = new System.Drawing.Point(125, 43);
-            this.StudentIDIn.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.StudentIDIn.Location = new System.Drawing.Point(188, 66);
+            this.StudentIDIn.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.StudentIDIn.Name = "StudentIDIn";
-            this.StudentIDIn.Size = new System.Drawing.Size(86, 20);
+            this.StudentIDIn.Size = new System.Drawing.Size(127, 26);
             this.StudentIDIn.TabIndex = 13;
-            this.StudentIDIn.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
-            // button2
+            // cancelModifyButton
             // 
-            this.button2.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(201, 170);
-            this.button2.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(53, 20);
-            this.button2.TabIndex = 26;
-            this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.cancelModifyButton.Font = new System.Drawing.Font("Yu Gothic UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cancelModifyButton.Location = new System.Drawing.Point(302, 262);
+            this.cancelModifyButton.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cancelModifyButton.Name = "cancelModifyButton";
+            this.cancelModifyButton.Size = new System.Drawing.Size(80, 31);
+            this.cancelModifyButton.TabIndex = 26;
+            this.cancelModifyButton.Text = "Cancel";
+            this.cancelModifyButton.UseVisualStyleBackColor = true;
+            this.cancelModifyButton.Click += new System.EventHandler(this.cancelModifyButton_Click);
             // 
             // ModifyRecord
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
-            this.ClientSize = new System.Drawing.Size(400, 234);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(600, 360);
+            this.Controls.Add(this.cancelModifyButton);
+            this.Controls.Add(this.submitModifyButton);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
@@ -215,10 +208,9 @@
             this.Controls.Add(this.CourseNumIn);
             this.Controls.Add(this.CoursePrefixIn);
             this.Controls.Add(this.StudentIDIn);
-            this.Margin = new System.Windows.Forms.Padding(1, 1, 1, 1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "ModifyRecord";
             this.Text = "Modify Record";
-            this.Load += new System.EventHandler(this.ModifyRecord_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -226,7 +218,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button submitModifyButton;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
@@ -239,6 +231,6 @@
         private System.Windows.Forms.TextBox CourseNumIn;
         private System.Windows.Forms.TextBox CoursePrefixIn;
         private System.Windows.Forms.TextBox StudentIDIn;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button cancelModifyButton;
     }
 }

@@ -18,7 +18,7 @@ namespace CSC_440_Group_Project
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void submitDeleteButton_Click(object sender, EventArgs e)
         {
             var (isValid, errorMessage) = Helper.validateModifyRecordForms(StudentIDIn.Text, CoursePrefixIn.Text, CourseNumIn.Text, GradeIn.Text, YearIn.Text, SemesterIn.Text);
 
@@ -34,7 +34,7 @@ namespace CSC_440_Group_Project
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void cancelDeleteButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }

@@ -20,12 +20,7 @@ namespace CSC_440_Group_Project
             InitializeComponent();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void submitPrintButton_Click(object sender, EventArgs e)
         {
             DatabaseHandler dbHandler = new DatabaseHandler();
 
@@ -34,7 +29,7 @@ namespace CSC_440_Group_Project
             this.Close();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void cancelPrintButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }

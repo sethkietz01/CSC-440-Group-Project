@@ -21,16 +21,7 @@ namespace CSC_440_Group_Project
             InitializeComponent();
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            DatabaseHandler dbHandler = new DatabaseHandler();
-
-            dbHandler.ImportRecordsFolder();
-
-            this.Close();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void fromFileButton_Click(object sender, EventArgs e)
         {
             DatabaseHandler dbHandler = new DatabaseHandler();
 
@@ -71,12 +62,16 @@ namespace CSC_440_Group_Project
             this.Close();
         }
 
-        private void mainLabel_Click(object sender, EventArgs e)
+        private void fromFolderButton_Click(object sender, EventArgs e)
         {
+            DatabaseHandler dbHandler = new DatabaseHandler();
 
+            dbHandler.ImportRecordsFolder();
+
+            this.Close();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void cancelImportButton_Click(object sender, EventArgs e)
         {
             this.Close();
         }

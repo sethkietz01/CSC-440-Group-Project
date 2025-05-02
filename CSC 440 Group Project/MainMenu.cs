@@ -21,12 +21,7 @@ namespace CSC_440_Group_Project
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
+            // No initialization required 
         }
 
         private void importRecordsButton_Click(object sender, EventArgs e)
@@ -58,9 +53,5 @@ namespace CSC_440_Group_Project
             Print_Report printReportForm = new Print_Report();
             printReportForm.ShowDialog();
         }
-
-        
-
-        
     }
 }

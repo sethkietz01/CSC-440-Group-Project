@@ -111,12 +111,6 @@
     <Compile Include="DeleteRecord.Designer.cs">
       <DependentUpon>DeleteRecord.cs</DependentUpon>
     </Compile>
-    <Compile Include="DisplayGrades.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="DisplayGrades.Designer.cs">
-      <DependentUpon>DisplayGrades.cs</DependentUpon>
-    </Compile>
     <Compile Include="Helper.cs" />
     <Compile Include="ImportRecords.cs">
       <SubType>Form</SubType>
@@ -149,9 +143,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DeleteRecord.resx">
       <DependentUpon>DeleteRecord.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="DisplayGrades.resx">
-      <DependentUpon>DisplayGrades.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ImportRecords.resx">
       <DependentUpon>ImportRecords.cs</DependentUpon>
