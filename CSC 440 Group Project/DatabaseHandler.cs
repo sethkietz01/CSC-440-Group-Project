@@ -159,6 +159,8 @@ namespace CSC_440_Group_Project
                     // clear parameters for another student
                     cmdG.Parameters.Clear();
                     cmdS.Parameters.Clear();
+
+                    updateGPA(studentID, conn);
                 }
 
                 // Prep sql select statement for course
@@ -178,6 +180,7 @@ namespace CSC_440_Group_Project
                     cmdC.ExecuteNonQuery();
 
                 }
+
             }
         }
 
@@ -323,7 +326,7 @@ namespace CSC_440_Group_Project
                 try
                 {
                     conn.Open();
-
+                    
                     // Query the database to make sure the requested record to delete exists
                     string selectQuery = "SELECT StudentID, CoursePrefix, CourseNum, Grade, Year, Semester FROM sklc440grades WHERE StudentID = @StudentID AND CoursePrefix = @CoursePrefix AND CourseNum = @CourseNum AND Year = @Year AND Semester = @Semester";
                     MySqlCommand selectCmd = new MySqlCommand(selectQuery, conn);
@@ -517,6 +520,8 @@ namespace CSC_440_Group_Project
                 {
                     conn.Open();
 
+                    updateGPA(studentID, conn);
+
                     string gradeQuery = @"
                                     SELECT
                                         g.coursePrefix,
@@ -634,36 +639,33 @@ namespace CSC_440_Group_Project
                         char grade = studentGrade.Item1;
                         string courseNum = studentGrade.Item2;
 
-                        if (courseHours.ContainsKey(courseNum))
+                        int hours = 3;
+                        double gradePoint = 0;
+
+                        switch (grade)
                         {
-                            int hours = courseHours[courseNum];
-                            double gradePoint = 0;
-
-                            switch (grade)
-                            {
-                                case 'A':
-                                    gradePoint = 4.0;
-                                    break;
-                                case 'B':
-                                    gradePoint = 3.0;
-                                    break;
-                                case 'C':
-                                    gradePoint = 2.0;
-                                    break;
-                                case 'D':
-                                    gradePoint = 1.0;
-                                    break;
-                                case 'F':
-                                    gradePoint = 0.0;
-                                    break;
-                                default:
-                                    hours = 0;
-                                    break;
-                            }
-
-                            totalGradePoints += gradePoint * hours;
-                            totalAttemptedCredits += hours;
+                            case 'A':
+                                gradePoint = 4.0;
+                                break;
+                            case 'B':
+                                gradePoint = 3.0;
+                                break;
+                            case 'C':
+                                gradePoint = 2.0;
+                                break;
+                            case 'D':
+                                gradePoint = 1.0;
+                                break;
+                            case 'F':
+                                gradePoint = 0.0;
+                                break;
+                            default:
+                                hours = 0;
+                                break;
                         }
+
+                        totalGradePoints += gradePoint * hours;
+                        totalAttemptedCredits += hours;
                     }
 
                     // Calculate and return GPA
@@ -711,10 +713,6 @@ namespace CSC_440_Group_Project
             {
                 // Handle database connection or query errors
                 Console.WriteLine($"Error updating GPA: {ex.Message}");
-            }
-            finally
-            {
-                conn.Close();
             }
         }
     }
