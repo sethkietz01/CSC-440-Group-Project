@@ -587,19 +587,26 @@ namespace CSC_440_Group_Project
                 }
             }
         }
+
         /// <summary>
-        /// Calcualtes the cumulative GPA for a student
+        /// Calculates the cumulative GPA for a student, retrieving course hours from the database.
         /// </summary>
-        /// <param name="studentID"></param>
-        /// <param name="conn"></param>
-        /// <returns></returns>
+        /// <param name="studentID">The ID of the student.</param>
+        /// <param name="conn">The MySQL connection object.</param>
+        /// <returns>The calculated GPA, or -1.0 if an error occurs.</returns>
         public static double calculateGPA(string studentID, MySqlConnection conn)
         {
             try
             {
-                // Get all grades for the student
-                string gradeQuery = "SELECT grade, courseNum FROM sklc440grades WHERE studentID = @studentID";
-                List<Tuple<char, string>> studentGrades = new List<Tuple<char, string>>();
+                // Get all grades and associated course information for the student
+                string gradeQuery = @"
+                    SELECT g.grade, c.hours
+                    FROM sklc440grades g
+                    INNER JOIN sklc440courses c ON g.coursePrefix = c.coursePrefix AND g.courseNum = c.courseNum
+                    WHERE g.studentID = @studentID";
+
+                double totalGradePoints = 0;
+                int totalAttemptedCredits = 0;
 
                 using (MySqlCommand gradeCmd = new MySqlCommand(gradeQuery, conn))
                 {
@@ -609,71 +616,44 @@ namespace CSC_440_Group_Project
                         while (gradeReader.Read())
                         {
                             char grade = gradeReader.GetChar("grade");
-                            string courseNum = gradeReader.GetString("courseNum");
-                            studentGrades.Add(Tuple.Create(grade, courseNum));
-                        }
-                    }
+                            int hours = gradeReader.GetInt32("hours");
+                            double gradePoint = 0;
 
-                    // Create a dictionary to store course hours
-                    Dictionary<string, int> courseHours = new Dictionary<string, int>();
-                    string courseQuery = "SELECT courseNum, hours FROM sklc440courses";
-                    using (MySqlCommand courseCmd = new MySqlCommand(courseQuery, conn))
-                    {
-                        using (MySqlDataReader courseReader = courseCmd.ExecuteReader())
-                        {
-                            while (courseReader.Read())
+                                    Console.WriteLine("grade = " + grade + "\nhours = " + hours);
+
+                            switch (grade)
                             {
-                                string courseNum = courseReader.GetString("courseNum");
-                                int hours = courseReader.GetInt32("hours");
-                                courseHours[courseNum] = hours;
+                                case 'A':
+                                    gradePoint = 4.0;
+                                    break;
+                                case 'B':
+                                    gradePoint = 3.0;
+                                    break;
+                                case 'C':
+                                    gradePoint = 2.0;
+                                    break;
+                                case 'D':
+                                    gradePoint = 1.0;
+                                    break;
+                                case 'F':
+                                    gradePoint = 0.0;
+                                    break;
+                                default:
+                                    hours = 0;
+                                    break;
                             }
+
+                            totalGradePoints += gradePoint * hours;
+                            totalAttemptedCredits += hours;
                         }
                     }
-
-                    // Calculate GPA
-                    double totalGradePoints = 0;
-                    int totalAttemptedCredits = 0;
-
-                    foreach (var studentGrade in studentGrades)
-                    {
-                        char grade = studentGrade.Item1;
-                        string courseNum = studentGrade.Item2;
-
-                        int hours = 3;
-                        double gradePoint = 0;
-
-                        switch (grade)
-                        {
-                            case 'A':
-                                gradePoint = 4.0;
-                                break;
-                            case 'B':
-                                gradePoint = 3.0;
-                                break;
-                            case 'C':
-                                gradePoint = 2.0;
-                                break;
-                            case 'D':
-                                gradePoint = 1.0;
-                                break;
-                            case 'F':
-                                gradePoint = 0.0;
-                                break;
-                            default:
-                                hours = 0;
-                                break;
-                        }
-
-                        totalGradePoints += gradePoint * hours;
-                        totalAttemptedCredits += hours;
-                    }
-
-                    // Calculate and return GPA
-                    if (totalAttemptedCredits > 0)
-                        return totalGradePoints / totalAttemptedCredits;
-                    else
-                        return 0.0;
                 }
+
+                // Calculate and return GPA
+                if (totalAttemptedCredits > 0)
+                    return Math.Round(totalGradePoints / totalAttemptedCredits, 2);
+                else
+                    return 0.0;
             }
             catch (MySqlException ex)
             {
