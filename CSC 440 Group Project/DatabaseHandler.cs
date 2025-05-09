@@ -105,8 +105,6 @@ namespace CSC_440_Group_Project
                 year = filename[2];
                 semester = filename[3];
 
-
-
                 // Prep the sql statement for grades
                 string sqlGrades = "INSERT INTO sklc440grades (studentID, coursePrefix, courseNum, grade, year, semester) SELECT @studentID, @coursePrefix, @courseNum, @grade, @year, @semester WHERE NOT EXISTS (SELECT 1 FROM sklc440grades WHERE studentID = @studentID AND coursePrefix = @coursePrefix AND courseNum = @courseNum AND year = @year AND semester = @semester);";
                 MySqlCommand cmdG = new MySqlCommand(sqlGrades, conn);
@@ -232,13 +230,13 @@ namespace CSC_440_Group_Project
                 return;
 
             // Don't allow a grade record with a future semester
-            if (semester == "Fall" && System.DateTime.Now.Month < 12)
+            if (semester == "Fall" && System.DateTime.Now.Month < 12 && int.Parse(year) == System.DateTime.Now.Year)
                 return;
 
-            if (semester == "Summer" && System.DateTime.Now.Month < 8)
+            if (semester == "Summer" && System.DateTime.Now.Month < 8 && int.Parse(year) == System.DateTime.Now.Year)
                 return;
 
-            if (semester == "Spring" && System.DateTime.Now.Month < 5)
+            if (semester == "Spring" && System.DateTime.Now.Month < 5 && int.Parse(year) == System.DateTime.Now.Year)
                 return;
 
 
@@ -250,6 +248,20 @@ namespace CSC_440_Group_Project
                 try
                 {
                     conn.Open();
+
+                    // Check if the student exists
+                    string checkStudentQuery = "SELECT COUNT(*) FROM sklc440student WHERE studentID = @StudentID";
+                    using (MySqlCommand checkStudentCmd = new MySqlCommand(checkStudentQuery, conn))
+                    {
+                        checkStudentCmd.Parameters.AddWithValue("@StudentID", studentID);
+                        long studentExists = (long)checkStudentCmd.ExecuteScalar();
+
+                        if (studentExists == 0)
+                        {
+                            MessageBox.Show($"Student with ID '{studentID}' does not exist.", "Add Record Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return; // Exit the method if the student doesn't exist
+                        }
+                    }
 
                     // Query the database to check for an existing record
                     string checkIfExistsQuery = "SELECT COUNT(*) FROM sklc440grades WHERE StudentID = @StudentID AND CoursePrefix = @CoursePrefix AND CourseNum = @CourseNum AND Year = @Year AND Semester = @Semester";
